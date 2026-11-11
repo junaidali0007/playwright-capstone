@@ -16,7 +16,7 @@ End-to-end UI test automation framework built with **Playwright** and **TypeScri
 - Login: valid and locked-out users
 - Product listing: filtering product cards by name
 - Cart: add a product, verify name, price, and quantity in the cart
-- Checkout flow (in progress)
+- Checkout flow
 
 ## Project structure
 ```
@@ -55,7 +55,7 @@ Tests run automatically on every push through GitHub Actions. The HTML report is
 - [x] Setup and first tests
 - [x] Locators, filtering, and cart verification
 - [x] CI pipeline
-- [ ] Hooks, grouping, tags, and `test.step`
+- [x] Hooks, grouping, tags, and `test.step`
 - [ ] Page Object Model and fixtures
 - [ ] API testing
 - [ ] Parallel execution and reporting improvements
