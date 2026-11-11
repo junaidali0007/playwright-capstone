@@ -1,0 +1,8 @@
+In Selenium you used By.Id, By.XPath, and By.CssSelector. Playwright prefers locators that match how users see the page. Use them in this order:
+
+getByRole: buttons, links, headings, checkboxes (best default)
+getByLabel: form fields with labels
+getByPlaceholder: inputs with placeholder text
+getByText: visible text
+getByTestId: data-testid attributes (great when the dev team adds them)
+locator('css=...') or XPath: last resort
