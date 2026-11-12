@@ -56,6 +56,7 @@ Tests run automatically on every push through GitHub Actions. The HTML report is
 - [x] Locators, filtering, and cart verification
 - [x] CI pipeline
 - [x] Hooks, grouping, tags, and `test.step`
+- [x] Debugging with screenshots, video, and traces
 - [ ] Page Object Model and fixtures
 - [ ] API testing
 - [ ] Parallel execution and reporting improvements
