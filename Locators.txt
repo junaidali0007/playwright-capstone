@@ -6,3 +6,5 @@ getByPlaceholder: inputs with placeholder text
 getByText: visible text
 getByTestId: data-testid attributes (great when the dev team adds them)
 locator('css=...') or XPath: last resort
+
+
