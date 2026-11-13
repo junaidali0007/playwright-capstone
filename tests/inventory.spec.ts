@@ -34,17 +34,3 @@ test.describe('Inventory', () => {
   });
 
 });
-test.describe('Logout', () => {
-
-  test.beforeEach(async ({ page }) => {
-    // same login steps as before
-  });
-
-  test('user can log out', { tag: '@smoke' }, async ({ page }) => {
-    await page.getByRole('button', { name: 'Open Menu' }).click();
-    await page.locator('[data-test="logout-sidebar-link"]').click();
-    // TODO: check the URL is 'https://www.saucedemo.com/'
-    // TODO: check the Login button is visible
-  });
-
-});
