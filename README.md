@@ -17,6 +17,11 @@ End-to-end UI test automation framework built with **Playwright** and **TypeScri
 - Product listing: filtering product cards by name
 - Cart: add a product, verify name, price, and quantity in the cart
 - Checkout flow
+- Login: valid user, locked-out user, wrong password, empty username
+- Inventory: sorting by price and name
+- Cart: add, verify, and remove products
+- Checkout: full purchase and form validation errors
+- Logout
 
 ## Project structure
 ```
