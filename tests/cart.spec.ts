@@ -1,5 +1,5 @@
 import { test, expect, Page } from '@playwright/test';
-
+const remainingProduct = 'Sauce Labs Onesie';
 async function addProductToCart(page: Page, productName: string) {
   const product = page.locator('.inventory_item').filter({ hasText: productName });
   await product.getByRole('button', { name: 'Add to cart' }).click();
@@ -38,15 +38,28 @@ test.describe('Cart', () => {
       await expect(page.locator('[data-test="continue-shopping"]')).toBeVisible();
       await page.getByRole('button', { name: 'Continue Shopping' }).click();
       await expect(page.getByText('Products')).toBeVisible();
-      await addProductToCart(page, 'Sauce Labs Onesie');
+      await addProductToCart(page, remainingProduct);
   });
 
     await test.step('Check the cart has 2 items', async () => {
       await page.locator('[data-test="shopping-cart-link"]').click();
       await expect(page.locator('.cart_item')).toHaveCount(2);
-      await expect(page.locator('.cart_item').nth(1).locator('.inventory_item_name')).toHaveText('Sauce Labs Onesie');
+      await expect(page.locator('.cart_item').nth(1).locator('.inventory_item_name')).toHaveText(remainingProduct);
   });
-  
+
+    await test.step('Remove the first product', async () => {
+      await page.getByRole('button', { name: 'Remove' }).first().click();
+      await expect(page.locator('.cart_item')).toHaveCount(1);
+      await expect(page.locator('.shopping_cart_badge')).toHaveText('1');
+      await expect(page.locator('.cart_item .inventory_item_name')).toHaveText(remainingProduct);
+});
+
+    await test.step('Remove the last product', async () => {
+      await page.getByRole('button', { name: 'Remove' }).click();
+      await expect(page.locator('.cart_item')).toHaveCount(0);
+      await expect(page.locator('.shopping_cart_badge')).toHaveCount(0);
+});
+
 });
 
 });
