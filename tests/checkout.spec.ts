@@ -1,77 +1,73 @@
 import { test, expect } from '@playwright/test';
+import { LoginPage } from '../pages/LoginPage';
+import { InventoryPage } from '../pages/InventoryPage';
+import { CartPage } from '../pages/CartPage';
+import { CheckoutPage } from '../pages/CheckoutPage';
 
-test.beforeEach(async ({ page }) => {
-    await page.goto('https://www.saucedemo.com');
-    await page.getByPlaceholder('Username').fill('standard_user');
-    await page.getByPlaceholder('Password').fill('secret_sauce');
-    await page.getByRole('button', { name: 'Login' }).click();
+test.describe('Checkout', () => {
+  let inventoryPage: InventoryPage;
+  let cartPage: CartPage;
+  let checkoutPage: CheckoutPage;
+
+  test.beforeEach(async ({ page }) => {
+    const loginPage = new LoginPage(page);
+    inventoryPage = new InventoryPage(page);
+    cartPage = new CartPage(page);
+    checkoutPage = new CheckoutPage(page);
+
+    await loginPage.goto();
+    await loginPage.login('standard_user', 'secret_sauce');
     await expect(page).toHaveURL(/inventory/);
   });
 
-test.describe('Checkout Form validation', () => {
-
-      test.beforeEach(async ({ page }) => {
-        await page.getByRole('button', { name: 'Add to cart' }).first().click();
-        await page.locator('[data-test="shopping-cart-link"]').click();
-        await page.getByRole('button', { name: 'Checkout' }).click();
-      });
-
-      test('shows an error when First Name is empty', async ({ page }) => {
-        await page.getByPlaceholder('Last Name').fill('Ali');
-        await page.getByPlaceholder('Zip/Postal Code').fill('54000');
-        await page.getByRole('button', { name: 'Continue' }).click();
-        await expect(page.locator('[data-test="error"]')).toContainText('First Name is required');
-      });
-
-      test('shows an error when Last Name is empty', async ({ page }) => {
-        await page.getByPlaceholder('First Name').fill('Junaid');
-        await page.getByPlaceholder('Zip/Postal Code').fill('54000');
-        await page.getByRole('button', { name: 'Continue' }).click();
-        await expect(page.locator('[data-test="error"]')).toContainText('Last Name is required');
-      });
-
-      test('shows an error when Zip/Postal Code is empty', async ({ page }) => {
-        await page.getByPlaceholder('First Name').fill('Junaid');
-        await page.getByPlaceholder('Last Name').fill('Ali');
-        await page.getByRole('button', { name: 'Continue' }).click();
-        await expect(page.locator('[data-test="error"]')).toContainText('Postal Code is required');
-      });
-
-});
-test.describe('Checkout', () => {
-
-  test('user can buy a product', { tag: '@smoke' }, async ({ page }) => {
-    let productName = '';
-    let productPrice = '';
+  test('user can buy a product', { tag: '@smoke' }, async () => {
+    const productName = 'Sauce Labs Backpack';
 
     await test.step('Add a product and open the cart', async () => {
-    const firstProduct = page.locator('.inventory_item').first();
-    productName = await firstProduct.locator('.inventory_item_name').innerText();
-    productPrice = await firstProduct.locator('.inventory_item_price').innerText();
+      await inventoryPage.addProductToCart(productName);
+      await inventoryPage.openCart();
+      await expect(cartPage.itemNames).toHaveText(productName);
+    });
 
-    await firstProduct.getByRole('button', { name: 'Add to cart' }).click();
-    await page.locator('[data-test="shopping-cart-link"]').click();
-    await expect(page.locator('.cart_item .inventory_item_name')).toHaveText(productName);
+    await test.step('Fill in the checkout details', async () => {
+      await cartPage.checkout();
+      await checkoutPage.fillDetails('Junaid', 'Ali', '54000');
+      await checkoutPage.continue();
+    });
+
+    await test.step('Check the order summary', async () => {
+      await expect(checkoutPage.summaryItemNames).toHaveText(productName);
+    });
+
+    await test.step('Finish the order', async () => {
+      await checkoutPage.finish();
+      await expect(checkoutPage.confirmationHeader).toHaveText('Thank you for your order!');
+    });
   });
 
-  await test.step('Fill in the checkout details', async () => {
-    await page.getByRole('button', { name: 'Checkout' }).click();
-    await page.getByPlaceholder('First Name').fill('Junaid');
-    await page.getByPlaceholder('Last Name').fill('Ali');
-    await page.getByPlaceholder('Zip/Postal Code').fill('54000');
-    await page.getByRole('button', { name: 'Continue' }).click();
-  });
+  test.describe('Form validation', () => {
+    test.beforeEach(async () => {
+      await inventoryPage.addProductToCart('Sauce Labs Backpack');
+      await inventoryPage.openCart();
+      await cartPage.checkout();
+    });
 
-  await test.step('Verify Product on Summary Page', async () => {
-    await expect(page.locator('.cart_item .inventory_item_name')).toHaveText(productName);
-    await expect(page.locator('.cart_item .inventory_item_price')).toHaveText(productPrice);
-  });
+    test('shows an error when First Name is empty', async () => {
+      await checkoutPage.fillDetails('', 'Ali', '54000');
+      await checkoutPage.continue();
+      await expect(checkoutPage.errorMessage).toContainText('First Name is required');
+    });
 
-  await test.step('Finish the order', async () => {
-    await page.getByRole('button', { name: 'Finish' }).click();
-    await expect(page.getByText('Thank you for your order!')).toBeVisible();
-  });
+    test('shows an error when Last Name is empty', async () => {
+      await checkoutPage.fillDetails('Junaid', '', '54000');
+      await checkoutPage.continue();
+      await expect(checkoutPage.errorMessage).toContainText('Last Name is required');
+    });
 
+    test('shows an error when Postal Code is empty', async () => {
+      await checkoutPage.fillDetails('Junaid', 'Ali', '');
+      await checkoutPage.continue();
+      await expect(checkoutPage.errorMessage).toContainText('Postal Code is required');
+    });
   });
-
 });
