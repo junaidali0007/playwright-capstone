@@ -22,15 +22,31 @@ End-to-end UI test automation framework built with **Playwright** and **TypeScri
 - Cart: add, verify, and remove products
 - Checkout: full purchase and form validation errors
 - Logout
+- add: Login once with a saved session (storage state)
 
 ## Project structure
 ```
 playwright-capstone/
-├── tests/                  # test specs
-├── playwright.config.ts    # Playwright configuration
+├── .github/
+│   └── workflows/
+│       └── playwright.yml      # CI pipeline (GitHub Actions)
+├── fixtures/
+│   └── pages.ts                # custom fixtures: loginPage, inventoryPage, cartPage, checkoutPage
+├── pages/                      # Page Object Model classes
+│   ├── LoginPage.ts
+│   ├── InventoryPage.ts
+│   ├── CartPage.ts
+│   └── CheckoutPage.ts
+├── tests/
+│   ├── auth.setup.ts           # logs in once and saves the session
+│   ├── login.spec.ts           # login: valid, locked out, wrong password, empty fields
+│   ├── inventory.spec.ts       # product list and sorting
+│   ├── cart.spec.ts            # add, verify, and remove products
+│   ├── checkout.spec.ts        # full purchase and form validation
+│   └── logout.spec.ts          # logout
+├── playwright.config.ts        # Playwright configuration (setup + Edge projects)
 ├── package.json
-└── .github/workflows/      # CI pipeline
-└── .pages                  # page object classes (LoginPage, InventoryPage, CartPage, CheckoutPage).
+└── README.md
 ```
 
 ## Getting started
@@ -63,7 +79,8 @@ Tests run automatically on every push through GitHub Actions. The HTML report is
 - [x] CI pipeline
 - [x] Hooks, grouping, tags, and `test.step`
 - [x] Debugging with screenshots, video, and traces
-- [x] Page Object Model and fixtures
+- [x] Page Object Model
+- [x] Fixtures
 - [ ] API testing
 - [ ] Parallel execution and reporting improvements
 
