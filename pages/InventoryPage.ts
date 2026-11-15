@@ -14,7 +14,7 @@ export class InventoryPage {
     constructor(page: Page) {
         this.page = page;
         this.cartItems = page.locator('.cart_item');
-        this.itemNames = page.locator('.cart_item .inventory_item_name');
+        this.itemNames = page.locator('.inventory_item_name');
         this.continueShoppingButton = page.getByRole('button', { name: 'Continue Shopping' });
         this.checkoutButton = page.getByRole('button', { name: 'Checkout' });
         this.cartLink = page.locator('[data-test="shopping-cart-link"]');
@@ -38,6 +38,9 @@ export class InventoryPage {
     }
     async openCart() {
         await this.cartLink.click();
+    }
+    async goto() {
+        await this.page.goto('https://www.saucedemo.com/inventory.html');
     }
 
     async continueShopping() {
