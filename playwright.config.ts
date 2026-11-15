@@ -33,8 +33,16 @@ export default defineConfig({
   /* Configure projects for major browsers */
   projects: [
      {
-      use: { ...devices['Desktop Chrome'], channel: 'msedge' },
-    },
+    name: 'setup',
+    testMatch: /.*\.setup\.ts/,
+    use: { ...devices['Desktop Chrome'], channel: 'msedge' },
+  },
+  {
+    name: 'edge',
+    use: { ...devices['Desktop Chrome'], channel: 'msedge' },
+    dependencies: ['setup'],
+    testIgnore: /.*\.setup\.ts/,
+  },
 
     /* Test against mobile viewports. */
     // {
