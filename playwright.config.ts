@@ -24,7 +24,7 @@ export default defineConfig({
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: 'html',
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
-    use: {
+  use: {
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
     video: process.env.CI ? 'off' : 'retain-on-failure',
@@ -32,17 +32,21 @@ export default defineConfig({
 
   /* Configure projects for major browsers */
   projects: [
-     {
-    name: 'setup',
-    testMatch: /.*\.setup\.ts/,
-    use: { ...devices['Desktop Chrome'], channel: 'msedge' },
-  },
-  {
-    name: 'edge',
-    use: { ...devices['Desktop Chrome'], channel: 'msedge' },
-    dependencies: ['setup'],
-    testIgnore: /.*\.setup\.ts/,
-  },
+    {
+      name: 'setup',
+      testMatch: /.*\.setup\.ts/,
+      use: { ...devices['Desktop Chrome'], channel: 'msedge' },
+    },
+    {
+      name: 'edge',
+      use: { ...devices['Desktop Chrome'], channel: 'msedge' },
+      dependencies: ['setup'],
+      testIgnore: [/.*\.setup\.ts/, /.*\.api\.spec\.ts/],
+    },
+    {
+      name: 'api',
+      testMatch: /.*\.api\.spec\.ts/,
+    },
 
     /* Test against mobile viewports. */
     // {
@@ -71,5 +75,5 @@ export default defineConfig({
   //   url: 'http://localhost:3000',
   //   reuseExistingServer: !process.env.CI,
   // },
-  timeout: 15000, 
+  timeout: 15000,
 });

@@ -23,6 +23,7 @@ End-to-end UI test automation framework built with **Playwright** and **TypeScri
 - Checkout: full purchase and form validation errors
 - Logout
 - add: Login once with a saved session (storage state)
+- API: GET (single, list, query params), POST, PUT, DELETE, and a 404 case against JSONPlaceholder
 
 ## Project structure
 ```
@@ -44,6 +45,8 @@ playwright-capstone/
 │   ├── cart.spec.ts            # add, verify, and remove products
 │   ├── checkout.spec.ts        # full purchase and form validation
 │   └── logout.spec.ts          # logout
+│   ├── api/
+│   │   └── posts.api.spec.ts   # API tests: GET, POST, PUT, DELETE, 404
 ├── playwright.config.ts        # Playwright configuration (setup + Edge projects)
 ├── package.json
 └── README.md
@@ -81,7 +84,7 @@ Tests run automatically on every push through GitHub Actions. The HTML report is
 - [x] Debugging with screenshots, video, and traces
 - [x] Page Object Model
 - [x] Fixtures
-- [ ] API testing
+- [x] API testing
 - [ ] Parallel execution and reporting improvements
 
 ## Author
