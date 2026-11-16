@@ -37,7 +37,7 @@ test.describe('Logout', () => {
 
   test('user can log out', { tag: '@smoke' }, async ({ inventoryPage, loginPage }) => {
     await inventoryPage.logout();
-    await expect(loginPage.page).toHaveURL('https://www.saucedemo.com/');
+    await expect(loginPage.page).toHaveURL('/');
     await expect(loginPage.loginButton).toBeVisible();
   });
 });

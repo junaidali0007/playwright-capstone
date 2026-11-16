@@ -24,6 +24,7 @@ End-to-end UI test automation framework built with **Playwright** and **TypeScri
 - Logout
 - add: Login once with a saved session (storage state)
 - API: GET (single, list, query params), POST, PUT, DELETE, and a 404 case against JSONPlaceholder
+- add “Data-driven tests”, “Shared test data”, and “Environment config with .env”.
 
 ## Project structure
 ```
@@ -38,16 +39,19 @@ playwright-capstone/
 │   ├── InventoryPage.ts
 │   ├── CartPage.ts
 │   └── CheckoutPage.ts
+├── test-data/
+│   └── users.ts                # shared test data (user credentials)
 ├── tests/
+│   ├── api/
+│   │   └── posts.api.spec.ts   # API tests: GET, POST, PUT, DELETE, 404
 │   ├── auth.setup.ts           # logs in once and saves the session
-│   ├── login.spec.ts           # login: valid, locked out, wrong password, empty fields
+│   ├── login.spec.ts           # login: valid user and data-driven error cases
 │   ├── inventory.spec.ts       # product list and sorting
 │   ├── cart.spec.ts            # add, verify, and remove products
 │   ├── checkout.spec.ts        # full purchase and form validation
 │   └── logout.spec.ts          # logout
-│   ├── api/
-│   │   └── posts.api.spec.ts   # API tests: GET, POST, PUT, DELETE, 404
-├── playwright.config.ts        # Playwright configuration (setup + Edge projects)
+├── .env.example                # environment variables (copy to .env)
+├── playwright.config.ts        # Playwright config (setup, edge, and api projects)
 ├── package.json
 └── README.md
 ```
@@ -85,7 +89,8 @@ Tests run automatically on every push through GitHub Actions. The HTML report is
 - [x] Page Object Model
 - [x] Fixtures
 - [x] API testing
-- [ ] Parallel execution and reporting improvements
+- [x] Test data and parametrized tests
+- [x] Parallel execution and reporting improvements
 
 ## Author
 **Junaid Ali**, Senior SQA Analyst

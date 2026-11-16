@@ -40,7 +40,7 @@ export class InventoryPage {
         await this.cartLink.click();
     }
     async goto() {
-        await this.page.goto('https://www.saucedemo.com/inventory.html');
+        await this.page.goto('/inventory.html');
     }
 
     async continueShopping() {
