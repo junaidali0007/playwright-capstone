@@ -1,0 +1,78 @@
+In Selenium you used By.Id, By.XPath, and By.CssSelector. Playwright prefers locators that match how users see the page. Use them in this order:
+
+getByRole: buttons, links, headings, checkboxes (best default)
+getByLabel: form fields with labels
+getByPlaceholder: inputs with placeholder text
+getByText: visible text
+getByTestId: data-testid attributes (great when the dev team adds them)
+locator('css=...') or XPath: last resort
+
+# Playwright cheat sheet
+
+## 1. Mock a network response
+```ts
+await page.route('**/api/products', async route => {
+  await route.fulfill({
+    status: 200,
+    contentType: 'application/json',
+    body: JSON.stringify([{ id: 1, name: 'Mock product' }]),
+  });
+});
+await page.goto('/');   // register the route BEFORE the page makes the call
+```
+Block a request instead: `await route.abort();`
+
+Wait for a real response:
+```ts
+const responsePromise = page.waitForResponse('**/api/orders');
+await page.getByRole('button', { name: 'Place order' }).click();
+const response = await responsePromise;
+expect(response.status()).toBe(200);
+```
+
+## 2. iframes
+```ts
+const frame = page.frameLocator('#my-frame');
+await frame.getByRole('button', { name: 'Submit' }).click();
+```
+
+## 3. New tab or window
+```ts
+const [newPage] = await Promise.all([
+  context.waitForEvent('page'),
+  page.getByRole('link', { name: 'Open in new tab' }).click(),
+]);
+await newPage.waitForLoadState();
+await expect(newPage).toHaveURL(/expected-path/);
+```
+The test needs `context` in its brackets: `async ({ page, context }) => {...}`.
+
+## 4. File upload and download
+```ts
+// upload
+await page.getByLabel('Upload file').setInputFiles('test-data/sample.pdf');
+
+// download
+const downloadPromise = page.waitForEvent('download');
+await page.getByRole('link', { name: 'Download report' }).click();
+const download = await downloadPromise;
+expect(download.suggestedFilename()).toBe('report.pdf');
+```
+
+## 5. Dialogs (alert, confirm, prompt)
+```ts
+page.once('dialog', async dialog => {
+  expect(dialog.message()).toBe('Are you sure?');
+  await dialog.accept();      // or dialog.dismiss()
+});
+await page.getByRole('button', { name: 'Delete' }).click();
+```
+Register the handler BEFORE the click that opens the dialog.
+
+## Handy extras
+- Hover: `await locator.hover();`
+- Checkbox: `await locator.check();` and `await expect(locator).toBeChecked();`
+- Dropdown: `await locator.selectOption('value');`
+- Keyboard: `await page.keyboard.press('Enter');`
+- Skip on a condition: `test.skip(condition, 'reason');`
+
