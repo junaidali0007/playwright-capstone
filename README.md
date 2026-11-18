@@ -2,7 +2,18 @@
 
 ![Playwright Tests](https://github.com/junaidali0007/playwright-capstone/actions/workflows/playwright.yml/badge.svg)
 
-End-to-end UI test automation framework built with **Playwright** and **TypeScript**, running on **GitHub Actions**.
+A UI and API test automation framework built with **Playwright** and **TypeScript**, running on **GitHub Actions**. It tests [SauceDemo](https://www.saucedemo.com), a public demo e-commerce site, and uses [JSONPlaceholder](https://jsonplaceholder.typicode.com) for the API tests.
+
+## Highlights
+- Page Object Model and custom fixtures
+- Login once, reuse the session (storage state)
+- Data-driven tests and shared test data
+- API tests in their own project, with no browser
+- Smoke tests tagged `@smoke`, with retries, traces, and screenshots on failure
+- CI on every push, with the HTML report uploaded as an artifact
+
+## Test report
+![Playwright HTML report](docs/images/report.png)
 
 **Application under test:** [SauceDemo](https://www.saucedemo.com), a public demo e-commerce site.
 
